@@ -115,7 +115,7 @@ class FlutterLarixController {
     return _muteStatus;
   }
 
-  updateAudioStatusCapture(audio) {
+  void updateAudioStatusCapture(dynamic audio) {
     _muteStatus = audio['mute'] == true;
   }
 

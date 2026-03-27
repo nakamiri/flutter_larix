@@ -125,7 +125,7 @@ class _StreamState extends State<Stream> with SingleTickerProviderStateMixin {
                                 margin: const EdgeInsets.only(top: 16),
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.5),
+                                  color: Colors.black.withValues(alpha:0.5),
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(100),
                                   ),
@@ -229,7 +229,7 @@ class _StreamState extends State<Stream> with SingleTickerProviderStateMixin {
                       child: Container(
                         width: MediaQuery.of(context).size.width - 40,
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.7),
+                          color: Colors.black.withValues(alpha:0.7),
                           borderRadius: const BorderRadius.all(
                             Radius.circular(16),
                           ),
@@ -260,7 +260,7 @@ class _StreamState extends State<Stream> with SingleTickerProviderStateMixin {
                                             "Manual focus",
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText2
+                                                .bodyMedium
                                                 ?.copyWith(
                                                   color: Colors.white,
                                                 ),
@@ -304,7 +304,7 @@ class _StreamState extends State<Stream> with SingleTickerProviderStateMixin {
                                       "autofocus",
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText2
+                                          .bodyMedium
                                           ?.copyWith(
                                             color: Colors.white,
                                           ),
@@ -355,7 +355,7 @@ class _StreamState extends State<Stream> with SingleTickerProviderStateMixin {
                                     "Flash",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .bodyText2
+                                        .bodyMedium
                                         ?.copyWith(
                                           color: Colors.white,
                                         ),
