@@ -6,9 +6,6 @@ import 'package:flutter_larix/src/flutter_larix_controller_options.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const channel = MethodChannel(
-      'br.com.devmagic.flutter_larix/nativeview_controller');
-
   group('MethodChannel integration', () {
     test('controller uses correct channel name', () {
       // Verify the controller can be created with a mock channel
