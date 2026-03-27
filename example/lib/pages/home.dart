@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
       body: Center(
         child: TextButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
+            backgroundColor: WidgetStateProperty.all<Color>(
                 Color.fromARGB(255, 169, 228, 174)),
           ),
           onPressed: () {
