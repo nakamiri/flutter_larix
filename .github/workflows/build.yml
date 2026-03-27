@@ -17,8 +17,43 @@ jobs:
           flutter-version: '3.41.x'
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter analyze --no-fatal-infos
-      - run: flutter test
+
+      - name: Flutter analyze
+        id: analyze
+        if: always()
+        run: flutter analyze --no-fatal-infos 2>&1 | tee /tmp/analyze.log
+
+      - name: Flutter test
+        id: test
+        if: always()
+        run: flutter test 2>&1 | tee /tmp/test.log
+
+      - name: Post failure log to PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body = '## :x: CI Failure Log\n\n';
+
+            for (const [name, path] of [['Analyze', '/tmp/analyze.log'], ['Test', '/tmp/test.log']]) {
+              try {
+                const log = fs.readFileSync(path, 'utf8');
+                if (log.trim()) {
+                  const tail = log.split('\n').slice(-80).join('\n');
+                  body += `### ${name}\n\`\`\`\n${tail}\n\`\`\`\n\n`;
+                }
+              } catch (e) {
+                // log file may not exist if step was skipped
+              }
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: body.slice(0, 65536),
+            });
 
   build-android:
     name: Build Android
@@ -38,7 +73,26 @@ jobs:
           flutter-version: '3.41.x'
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter build apk --debug
+
+      - name: Build APK
+        id: build_android
+        run: flutter build apk --debug 2>&1 | tee /tmp/build_android.log
+
+      - name: Post failure log to PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const log = fs.readFileSync('/tmp/build_android.log', 'utf8');
+            const tail = log.split('\n').slice(-80).join('\n');
+            const body = `## :x: Android Build Failure\n\`\`\`\n${tail}\n\`\`\``;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: body.slice(0, 65536),
+            });
 
   build-ios:
     name: Build iOS
@@ -54,4 +108,23 @@ jobs:
           flutter-version: '3.41.x'
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter build ios --no-codesign
+
+      - name: Build iOS
+        id: build_ios
+        run: flutter build ios --no-codesign 2>&1 | tee /tmp/build_ios.log
+
+      - name: Post failure log to PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const log = fs.readFileSync('/tmp/build_ios.log', 'utf8');
+            const tail = log.split('\n').slice(-80).join('\n');
+            const body = `## :x: iOS Build Failure\n\`\`\`\n${tail}\n\`\`\``;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: body.slice(0, 65536),
+            });
