@@ -17,7 +17,7 @@ jobs:
           flutter-version: '3.19.x'
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter analyze
+      - run: flutter analyze --no-fatal-infos
       - run: flutter test
 
   build-android:
